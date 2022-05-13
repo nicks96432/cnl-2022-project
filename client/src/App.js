@@ -4,48 +4,47 @@ import CreateEvent from "./components/CreateEvent";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import HourBox from "./components/HourBox";
 
 function App() {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors }
-    } = useForm();
-    const login = ({ username }) => {
-        console.log(username);
-        console.log(errors);
-    };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm();
+  const login = ({ username }) => {
+    console.log(username);
+    console.log(errors);
+  };
 
-    return (
-        <div className="App">
-            <h1>CNL 2022 Final</h1>
-            <Container>
-                <Row>
-                    <Col>
-                        <Form onSubmit={handleSubmit(login)}>
-                            <InputGroup>
-                                <Form.Control
-                                    placeholder="Enter your username"
-                                    {...register("username", {
-                                        required: true
-                                    })}
-                                />
-                                <Button type="submit">Log in!</Button>
-                            </InputGroup>
-                            {errors.username && (
-                                <Form.Text>
-                                    You need to input your name
-                                </Form.Text>
-                            )}
-                        </Form>
-                    </Col>
-                    <Col>
-                        <CreateEvent></CreateEvent>
-                    </Col>
-                </Row>
-            </Container>
-        </div>
-    );
+  return (
+    <div className="App">
+      <h1>CNL 2022 Final</h1>
+      <Container>
+        <Row>
+          <Col>
+            <Form onSubmit={handleSubmit(login)}>
+              <InputGroup>
+                <Form.Control
+                  placeholder="Enter your username"
+                  {...register("username", {
+                    required: true
+                  })}
+                />
+                <Button type="submit">Log in!</Button>
+              </InputGroup>
+              {errors.username && (
+                <Form.Text>You need to input your name</Form.Text>
+              )}
+            </Form>
+          </Col>
+          <Col>
+            <HourBox></HourBox>
+          </Col>
+        </Row>
+      </Container>
+    </div>
+  );
 }
 
 export default App;
