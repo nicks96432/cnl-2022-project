@@ -1,23 +1,26 @@
 {
-    "name": "when2meet-backend",
-    "private": true,
-    "version": "0.1.0",
-    "dependencies": {
-        "dotenv-defaults": "^5.0.0",
-        "graphql": "^16.5.0",
-        "mongoose": "^6.3.3"
-    },
-    "devDependencies": {
-        "nodemon-webpack-plugin": "^4.7.1",
-        "webpack": "^5.72.1",
-        "webpack-cli": "^4.9.2",
-        "webpack-node-externals": "^3.0.0"
-    },
-    "lint-staged": {
-        "**/*": "prettier --write --ignore-unknown"
-    },
-    "scripts": {
-        "dev": "webpack --watch",
-        "build": "webpack"
-    }
+  "name": "when2meet-backend",
+  "private": true,
+  "version": "0.1.0",
+  "dependencies": {
+    "dotenv-defaults": "^5.0.0",
+    "graphql": "^16.5.0",
+    "mongoose": "^6.3.3"
+  },
+  "devDependencies": {
+    "nodemon-webpack-plugin": "^4.7.1",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2",
+    "webpack-node-externals": "^3.0.0",
+    "nodemon": "^2.0.4",
+    "socket.io": "^3.0.4"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  },
+  "scripts": {
+    "dev": "webpack --watch",
+    "build": "webpack",
+    "start": "nodemon ./index.js"
+  }
 }

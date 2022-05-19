@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {} from "react-bootstrap";
-import "../App.css";
+import "../Login/Login.css";
 import "../stylesheets/when2meet.scss";
 
 const HourBox = () => {
