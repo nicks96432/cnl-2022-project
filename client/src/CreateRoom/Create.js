@@ -22,7 +22,7 @@ const Home = () => {
               fontWeight: "bold"
             }}
           >
-            Hello{" "}
+            Create A Chatroom{" "}
           </Form.Label>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -38,7 +38,7 @@ const Home = () => {
         <Button
           variant="primary"
           onClick={() => {
-            if (/*room not exist*/ false) {
+            if (/*room exist*/ false) {
             } else if (roomId === "") {
               setWarning("Empty Room ID");
             } else {
@@ -46,15 +46,9 @@ const Home = () => {
             }
           }}
         >
-          Enter !
+          Create !
         </Button>
       </Form>
-      <Button
-        variant="outline-secondary"
-        onClick={() => history.push("create")}
-      >
-        Add Chatroom
-      </Button>
     </Stack>
   );
 };

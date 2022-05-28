@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Login from "./Login/Login";
 import Menu from "./Menu/Menu";
 import ChatRoom from "./ChatRoom/ChatRoom";
+import Create from "./CreateRoom/Create";
 
 function App() {
   return (
@@ -13,7 +14,8 @@ function App() {
       <Switch>
         <Route exact path="/" component={Login} />
         <Route exact path="/menu" component={Menu} />
-        <Route exact path="/:roomId" component={ChatRoom} />
+        <Route exact path="/create" component={Create} />
+        <Route exact path="/chatroom/:roomId" component={ChatRoom} />
       </Switch>
     </Router>
   );
