@@ -1,11 +1,9 @@
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import CreateEvent from "../components/CreateEvent";
 import { useHistory } from "react-router-dom";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Login.css";
-import HourBox from "../components/HourBox";
 
 function Login() {
   const history = useHistory();
@@ -41,9 +39,6 @@ function Login() {
                 <Form.Text>You need to input your name</Form.Text>
               )}
             </Form>
-          </Col>
-          <Col>
-            <HourBox></HourBox>
           </Col>
         </Row>
       </Container>
