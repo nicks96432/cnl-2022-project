@@ -5,8 +5,8 @@ import { useHistory } from "react-router-dom";
 
 const Home = () => {
   const history = useHistory();
-  const [roomId, setroomId] = React.useState(""); // Message to be sent
-  const [warning, setWarning] = React.useState(""); // Message to be sent
+  const [roomId, setroomId] = React.useState("");
+  const [warning, setWarning] = React.useState("");
   const handleroomIdChange = event => {
     setroomId(event.target.value);
   };
