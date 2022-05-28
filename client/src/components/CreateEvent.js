@@ -7,7 +7,7 @@ import {
   DropdownButton,
   Dropdown
 } from "react-bootstrap";
-import "../App.css";
+import "../Login/Login.css";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { DateRangePicker } from "react-date-range";
