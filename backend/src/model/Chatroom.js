@@ -7,8 +7,8 @@ const ChatroomSchema = new Schema(
       required: true,
       unique: true
     },
-    admin: {
-      type: Schema.Types.ObjectId,
+    admins: {
+      type: [Schema.Types.ObjectId],
       ref: "User"
     },
     messages: {

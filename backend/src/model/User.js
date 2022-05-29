@@ -29,7 +29,7 @@ UserSchema.methods.validPassword = function (password) {
 };
 
 UserSchema.methods.isAdmin = function (chatroom) {
-  return chatroom.admin._id == this._id;
+  return chatroom.admins.some(admin => admin._id === this._id);
 }
 
 const User = model("User", UserSchema);
