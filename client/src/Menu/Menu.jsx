@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { ListGroup, Badge, Form, Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import { UserContext } from '../contexts/user';
 
 const Home = () => {
   const history = useHistory();
@@ -42,14 +43,15 @@ const Home = () => {
   ));
 
   const { register, handleSubmit } = useForm();
-
+  const { userId } = useContext(UserContext);
   return (
     <>
       <ListGroup as="ol" numbered>
         {Li}
       </ListGroup>
       <Form onSubmit={handleSubmit(async ({name}) => {
-        await axios.post(`${process.env.REACT_APP_BACKEND_URL}/chatrooms/create`, { name })
+        await axios.post(`${process.env.REACT_APP_BACKEND_URL}/chatrooms/create`, { name, userId })
+        window.location.reload(false);
       })}>
         <Form.Control placeholder="new chatroom name" {...register('name', {required: true})} />
         <Button type="submit">Add chatroom</Button>

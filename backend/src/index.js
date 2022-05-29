@@ -41,6 +41,7 @@ app.get('/users', async (req, res) => {
 
 app.post('/users/create', async (req, res) => {
   const { name, password } = req.body;
+  if (await User.exists({ name })) return res.status(400).send('Name already exists');
   const newUser = new User({ name });
   newUser.setPassword(password);
   req.session.userId = newUser._id;
@@ -55,7 +56,7 @@ app.post('/users/login', async (req, res) => {
     req.session.userId = user._id;
     res.send('Logged in successfully!')
   }
-  res.send('Failed to login!')
+  res.status(400).send();
 })
 
 app.get('/messages', async (req, res) => {
@@ -67,8 +68,8 @@ app.get('/chatrooms', async (req, res) => {
 })
 
 app.post('/chatrooms/create', async (req, res) => {
-  const { name } = req.body;
-  const { userId } = req.session;
+  const { name, userId } = req.body;
+  console.log(req.session)
   const newRoom = new Chatroom({ name });
   newRoom.admins.push(userId);
   await newRoom.save();
@@ -81,8 +82,7 @@ app.get('/chatrooms/:roomId', async (req, res) => {
 })
 
 app.post('/chatrooms/:roomId/messages/create', async (req, res) => {
-  const { roomId, content } = req.body;
-  const { userId } = req.session;
+  const { roomId, content, userId } = req.body;
   const chatroom = await Chatroom.findById(roomId);
   const newMessage = await Message.create({ content, user: userId });
   chatroom.messages.push(newMessage._id);
@@ -91,8 +91,7 @@ app.post('/chatrooms/:roomId/messages/create', async (req, res) => {
 })
 
 app.delete('/chatrooms/:roomId/messages/:messageId', async (req, res) => {
-  const { roomId, messageId } = req.params;
-  const { userId } = req.session;
+  const { roomId, messageId, userId } = req.params;
   if (userId && (await User.findById(userId)).isAdmin(await Chatroom.findById(roomId))) {
     await Message.deleteById(messageId);
   }
