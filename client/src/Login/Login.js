@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
@@ -12,9 +13,13 @@ function Login() {
     handleSubmit,
     formState: { errors }
   } = useForm();
-  const login = ({ username }) => {
-    console.log(username);
-    console.log(errors);
+  const login = async ({ name, password }) => {
+    console.log({ name, password })
+    await axios.post(
+      `${process.env.REACT_APP_BACKEND_URL}/users/login`,
+      { name, password }
+    )
+    history.push("menu")
   };
 
   return (
@@ -27,15 +32,22 @@ function Login() {
               <InputGroup>
                 <Form.Control
                   placeholder="Enter your username"
-                  {...register("username", {
+                  {...register("name", {
                     required: true
                   })}
                 />
-                <Button type="submit" onClick={() => history.push("menu")}>
+                <Form.Control
+                  placeholder="Enter your password"
+                  type="password"
+                  {...register("password", {
+                    required: true
+                  })}
+                />
+                <Button type="submit">
                   Log in!
                 </Button>
               </InputGroup>
-              {errors.username && (
+              {errors.name && (
                 <Form.Text>You need to input your name</Form.Text>
               )}
             </Form>

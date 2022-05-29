@@ -7,6 +7,7 @@ import User from "./model/User";
 import Message from "./model/Message";
 import Chatroom from "./model/Chatroom";
 import cookieSession from 'cookie-session';
+import cors from "cors";
 
 dotenv_defaults.config();
 
@@ -22,10 +23,11 @@ app.use(
     path: '/',
   }),
 );
-
+app.use(cors())
 app.use((req, res, next) => {
   console.log(req.url);
   console.log(req.body);
+  console.log(req.params);
   next();
 });
 
@@ -47,8 +49,8 @@ app.post('/users/create', async (req, res) => {
 })
 
 app.post('/users/login', async (req, res) => {
-  const { username, password } = req.body;
-  const user = await User.findOne({ username });
+  const { name, password } = req.body;
+  const user = await User.findOne({ name });
   if (user && user.validPassword(password)) {
     res.cookie('userId', user._id);
     res.send('Logged in successfully!')
