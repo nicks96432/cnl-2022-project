@@ -37,7 +37,9 @@ app.get('/users', async (req, res) => {
 
 app.post('/users/create', async (req, res) => {
   const { name, password } = req.body;
-  const newUser = await User.create({ name, password });
+  const newUser = new User({ name });
+  newUser.setPassword(password);
+  await newUser.save();
   res.send(newUser);
 })
 
