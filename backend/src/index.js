@@ -22,11 +22,13 @@ app.use(
     path: '/',
   }),
 );
+
 app.use((req, res, next) => {
   console.log(req.url);
   console.log(req.body);
   next();
 });
+
 app.get('/', (req, res) => {
   res.send('hi');
 })
@@ -39,8 +41,19 @@ app.post('/users/create', async (req, res) => {
   const { name, password } = req.body;
   const newUser = new User({ name });
   newUser.setPassword(password);
+  res.cookie('userId', newUser._id);
   await newUser.save();
   res.send(newUser);
+})
+
+app.post('/users/login', async (req, res) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ username });
+  if (user && user.validPassword(password)) {
+    res.cookie('userId', user._id);
+    res.send('Logged in successfully!')
+  }
+  res.send('Failed to login!')
 })
 
 app.get('/messages', async (req, res) => {
@@ -49,6 +62,29 @@ app.get('/messages', async (req, res) => {
 
 app.get('/chatrooms', async (req, res) => {
   res.send(await Chatroom.find({}));
+})
+
+app.get('/chatrooms/:name', async (req, res) => {
+  const { name } = req.params;
+  res.send(await Chatroom.findOne({ name }));
+})
+
+app.post('/chatrooms/:name/messages/create', async (req, res) => {
+  const { name, content } = req.body;
+  const { userId } = req.signedCookies;
+  const chatroom = await Chatroom.findOne({ name });
+  const newMessage = await Message.create({ content, user: userId });
+  chatroom.messages.push(newMessage._id);
+  chatroom.save();
+  res.send(newMessage);
+})
+
+app.delete('/chatrooms/:name/messages/:messageId', async (req, res) => {
+  const { name, messageId } = req.params;
+  const { userId } = req.signedCookies;
+  if (userId && (await User.findById(userId)).isAdmin(await Chatroom.findOne({ name }))) {
+    await Message.deleteById(messageId);
+  }
 })
 
 app.get('*', function (req, res) {

@@ -28,6 +28,10 @@ UserSchema.methods.validPassword = function (password) {
   return this.hash === hash;
 };
 
+UserSchema.methods.isAdmin = function (chatroom) {
+  return chatroom.admin._id == this._id;
+}
+
 const User = model("User", UserSchema);
 
 export default User;
