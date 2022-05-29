@@ -43,7 +43,7 @@ app.post('/users/create', async (req, res) => {
   const { name, password } = req.body;
   const newUser = new User({ name });
   newUser.setPassword(password);
-  res.cookie('userId', newUser._id);
+  req.session.userId = newUser._id;
   await newUser.save();
   res.send(newUser);
 })
@@ -52,7 +52,7 @@ app.post('/users/login', async (req, res) => {
   const { name, password } = req.body;
   const user = await User.findOne({ name });
   if (user && user.validPassword(password)) {
-    res.cookie('userId', user._id);
+    req.session.userId = user._id;
     res.send('Logged in successfully!')
   }
   res.send('Failed to login!')
@@ -68,7 +68,7 @@ app.get('/chatrooms', async (req, res) => {
 
 app.post('/chatrooms/create', async (req, res) => {
   const { name } = req.body;
-  const { userId } = req.signedCookies;
+  const { userId } = req.session;
   const newRoom = new Chatroom({ name });
   newRoom.admins.push(userId);
   await newRoom.save();
@@ -82,7 +82,7 @@ app.get('/chatrooms/:roomId', async (req, res) => {
 
 app.post('/chatrooms/:roomId/messages/create', async (req, res) => {
   const { roomId, content } = req.body;
-  const { userId } = req.signedCookies;
+  const { userId } = req.session;
   const chatroom = await Chatroom.findById(roomId);
   const newMessage = await Message.create({ content, user: userId });
   chatroom.messages.push(newMessage._id);
@@ -92,7 +92,7 @@ app.post('/chatrooms/:roomId/messages/create', async (req, res) => {
 
 app.delete('/chatrooms/:roomId/messages/:messageId', async (req, res) => {
   const { roomId, messageId } = req.params;
-  const { userId } = req.signedCookies;
+  const { userId } = req.session;
   if (userId && (await User.findById(userId)).isAdmin(await Chatroom.findById(roomId))) {
     await Message.deleteById(messageId);
   }

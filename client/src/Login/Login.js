@@ -2,6 +2,7 @@ import axios from "axios";
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
+import { useState } from "react"
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Login.css";
@@ -13,10 +14,11 @@ function Login() {
     handleSubmit,
     formState: { errors }
   } = useForm();
+  const [isLogin, setIsLogin] = useState(true)
   const login = async ({ name, password }) => {
     console.log({ name, password })
     await axios.post(
-      `${process.env.REACT_APP_BACKEND_URL}/users/login`,
+      `${process.env.REACT_APP_BACKEND_URL}/users/` + (isLogin ? 'login' : 'create'),
       { name, password }
     )
     history.push("menu")
@@ -44,7 +46,7 @@ function Login() {
                   })}
                 />
                 <Button type="submit">
-                  Log in!
+                  {isLogin ? 'Log in!' : 'Sign up!'}
                 </Button>
               </InputGroup>
               {errors.name && (
@@ -53,6 +55,9 @@ function Login() {
             </Form>
           </Col>
         </Row>
+        <Button onClick={() => setIsLogin(s => !s)}>
+          Switch!
+        </Button>
       </Container>
     </div>
   );

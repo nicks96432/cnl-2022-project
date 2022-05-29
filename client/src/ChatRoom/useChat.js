@@ -26,13 +26,12 @@ const useChat = roomId => {
         };
         setMessages(messages => [...messages, incomingMessage]);
       });
-
-      // Destroys the socket reference
-      // when the connection is closed
-      return () => {
-        socketRef.current.disconnect();
-      };
     })();
+    // Destroys the socket reference
+    // when the connection is closed
+    return () => {
+      socketRef.current.disconnect();
+    };
   }, [roomId]);
 
   // Sends a message to the server that
