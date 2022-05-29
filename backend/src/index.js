@@ -66,25 +66,34 @@ app.get('/chatrooms', async (req, res) => {
   res.send(await Chatroom.find({}));
 })
 
-app.get('/chatrooms/:name', async (req, res) => {
-  const { name } = req.params;
-  res.send(await Chatroom.findOne({ name }));
+app.post('/chatrooms/create', async (req, res) => {
+  const { name } = req.body;
+  const { userId } = req.signedCookies;
+  const newRoom = new Chatroom({ name });
+  newRoom.admins.push(userId);
+  await newRoom.save();
+  res.send(newRoom);
 })
 
-app.post('/chatrooms/:name/messages/create', async (req, res) => {
-  const { name, content } = req.body;
+app.get('/chatrooms/:roomId', async (req, res) => {
+  const { roomId } = req.params;
+  res.send(await Chatroom.findById(roomId).populate());
+})
+
+app.post('/chatrooms/:roomId/messages/create', async (req, res) => {
+  const { roomId, content } = req.body;
   const { userId } = req.signedCookies;
-  const chatroom = await Chatroom.findOne({ name });
+  const chatroom = await Chatroom.findById(roomId);
   const newMessage = await Message.create({ content, user: userId });
   chatroom.messages.push(newMessage._id);
   chatroom.save();
   res.send(newMessage);
 })
 
-app.delete('/chatrooms/:name/messages/:messageId', async (req, res) => {
-  const { name, messageId } = req.params;
+app.delete('/chatrooms/:roomId/messages/:messageId', async (req, res) => {
+  const { roomId, messageId } = req.params;
   const { userId } = req.signedCookies;
-  if (userId && (await User.findById(userId)).isAdmin(await Chatroom.findOne({ name }))) {
+  if (userId && (await User.findById(userId)).isAdmin(await Chatroom.findById(roomId))) {
     await Message.deleteById(messageId);
   }
 })

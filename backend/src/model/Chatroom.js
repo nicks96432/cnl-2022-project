@@ -5,15 +5,16 @@ const ChatroomSchema = new Schema(
     name: {
       type: String,
       required: true,
-      unique: true
     },
     admins: {
       type: [Schema.Types.ObjectId],
-      ref: "User"
+      ref: "User",
+      default: []
     },
     messages: {
       type: [Schema.Types.ObjectId],
-      ref: "Message"
+      ref: "Message",
+      default: []
     }
   },
   { timestamps: true }
