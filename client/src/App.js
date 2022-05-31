@@ -1,11 +1,9 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import "./index.css";
-import "bootstrap/dist/css/bootstrap.min.css";
+import ChatRoom from "./ChatRoom/ChatRoom";
 import Login from "./Login/Login";
 import Menu from "./Menu/Menu";
-import ChatRoom from "./ChatRoom/ChatRoom";
 
 function App() {
   return (

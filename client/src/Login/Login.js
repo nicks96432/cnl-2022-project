@@ -1,68 +1,55 @@
 import axios from "axios";
-import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
-import { useForm } from "react-hook-form";
+import { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { useState, useContext } from "react"
 import { UserContext } from "../contexts/user";
 
-import "bootstrap/dist/css/bootstrap.min.css";
 import "./Login.css";
 
-function Login() {
+const Login = () => {
   const history = useHistory();
   const { setUserId } = useContext(UserContext);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm();
   const [isLogin, setIsLogin] = useState(true);
-  const login = async ({ name, password }) => {
-    const { data } = await axios.post(
-      `${process.env.REACT_APP_BACKEND_URL}/users/` + (isLogin ? 'login' : 'create'),
-      { name, password }
-    )
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+
+  const login = async () => {
+    const url = `${process.env.REACT_APP_BACKEND_URL}/users/${
+      isLogin ? "login" : "create"
+    }`;
+    const { data } = await axios.post(url, { name, password });
+    console.log(data);
     setUserId(data._id);
-    history.push("menu")
+    history.push("menu");
   };
 
   return (
-    <div className="App">
-      <h1>CNL 2022 Final</h1>
-      <Container>
-        <Row>
-          <Col>
-            <Form onSubmit={handleSubmit(login)}>
-              <InputGroup>
-                <Form.Control
-                  placeholder="Enter your username"
-                  {...register("name", {
-                    required: true
-                  })}
-                />
-                <Form.Control
-                  placeholder="Enter your password"
-                  type="password"
-                  {...register("password", {
-                    required: true
-                  })}
-                />
-                <Button type="submit">
-                  {isLogin ? 'Log in!' : 'Sign up!'}
-                </Button>
-              </InputGroup>
-              {errors.name && (
-                <Form.Text>You need to input your name</Form.Text>
-              )}
-            </Form>
-          </Col>
-        </Row>
-        <Button onClick={() => setIsLogin(s => !s)}>
-          Switch!
-        </Button>
-      </Container>
+    <div className="Login">
+      <div className="Login__title">CNL 2022 Final</div>
+      <div className="Login__form">
+        <div className="Login__input-group">
+          <input
+            className="Login__input"
+            placeholder="username"
+            onChange={e => setName(e.target.value)}
+          />
+          <input
+            className="Login__input"
+            placeholder="password"
+            type="password"
+            onChange={e => setPassword(e.target.value)}
+          />
+        </div>
+        <div className="Login__input-group">
+          <button className="Login__button" onClick={login}>
+            {isLogin ? "ログイン!" : "サインアップ!"}
+          </button>
+          <button className="Login__button" onClick={() => setIsLogin(s => !s)}>
+            スウィッチ!
+          </button>
+        </div>
+      </div>
     </div>
   );
-}
+};
 
 export default Login;

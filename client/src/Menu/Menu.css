@@ -1,0 +1,58 @@
+.Menu {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+  width: 80%;
+}
+.Menu__title {
+  font-size: 3vw;
+  margin: 0.5em auto;
+}
+
+.Menu__chatroom {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 80%;
+}
+
+.Menu__chatroom__item {
+  border-radius: 1rem;
+  border: 1px solid #888;
+  cursor: pointer;
+  margin: 1rem;
+  padding: 1em;
+  width: 60%;
+}
+
+.Menu__chatroom__item__name {
+  color: #000;
+  font-size: 2em;
+}
+
+.Menu__input-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+}
+
+.Menu__input {
+  border-radius: 5px;
+  border: 1px solid #487cce;
+  margin: 10px;
+  padding: 10px 0;
+  width: 60%;
+}
+
+.Menu__button {
+  background: #487cce;
+  border-radius: 5px;
+  color: #ffffff;
+  cursor: pointer;
+  margin: 10px;
+  padding: 10px;
+}
