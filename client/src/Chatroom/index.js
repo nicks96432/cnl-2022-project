@@ -25,7 +25,7 @@ const ChatRoom = () => {
 
   return (
     <div className="Chatroom">
-      <h1 className="Chatroom__title">Room: {roomId}</h1>
+      <h1 className="Chatroom__title">Room: {chatroomData && chatroomData.name}</h1>
       <div className="Chatroom__message-list">
         {chatroomData ? chatroomData.messages.map(({ _id, content, user }) => (
           <div className={userId === user._id ? "message__self" : "message__other"} key={_id}>
