@@ -3,7 +3,6 @@ import socketIOClient from "socket.io-client";
 import axios from "axios";
 
 const NEW_CHAT_MESSAGE_EVENT = "newChatMessage"; // Name of the event
-const SOCKET_SERVER_URL = "http://localhost:3000";
 
 const useChat = roomId => {
   const [messages, setMessages] = useState([]); // Sent and received messages
@@ -16,7 +15,7 @@ const useChat = roomId => {
       );
       setMessages(data.messages);
       // Creates a WebSocket connection
-      socketRef.current = socketIOClient(SOCKET_SERVER_URL, {
+      socketRef.current = socketIOClient(process.env.REACT_APP_BACKEND_URL, {
         query: { roomId }
       });
 

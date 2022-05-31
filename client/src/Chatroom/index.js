@@ -1,62 +1,61 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import Context from "../Context";
-import useChat from "./useChat";
+import { useForm } from "react-hook-form";
+import axios from "axios";
 import "./Chatroom.css";
 
 const ChatRoom = () => {
   const { roomId } = useParams(); // Gets roomId from URL
-  const { messages, sendMessage } = useChat(roomId); // Creates a websocket and manages messaging
-  const [newMessage, setNewMessage] = useState(""); // Message to be sent
   const { userId } = useContext(Context);
+  const [chatroomData, setChatroomData] = useState();
+  const { register, handleSubmit, reset } = useForm();
+  const [isFirstRender, setIsFirstRender] = useState(true);
 
-  const fakeData = [
-    { user: { _id: 20, name: "A" }, content: "test1" },
-    { user: { _id: 21, name: "B" }, content: "test2" }
-  ];
-
-  const li = fakeData.map((message, i) =>
-    20 === message.user._id ? (
-      <div className="message__self" key={i}>
-        <div className="user">{message.user.name}</div>
-        <div className="content">
-          <div className="text">{message.content}</div>
-        </div>
-      </div>
-    ) : (
-      <div className="message__other" key={i}>
-        <div className="user">{message.user.name}</div>
-        <div className="content">
-          <div className="text">{message.content}</div>
-        </div>
-      </div>
-    )
-  );
-
-  const handleNewMessageChange = event => {
-    setNewMessage(event.target.value);
-  };
-
-  const handleSendMessage = () => {
-    sendMessage(newMessage);
-    setNewMessage("");
-  };
-
+  const getData = useCallback(() => {
+    (async () => {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/chatrooms/${roomId}`
+      );
+      setChatroomData(data);
+      setIsFirstRender(false);
+    })()
+  }, [roomId]);
+  if (isFirstRender) {
+    getData();
+  }
+  console.log(userId);
+  console.log(chatroomData);
   return (
     <div className="Chatroom">
       <h1 className="Chatroom__title">Room: {roomId}</h1>
-      <div className="Chatroom__message-list">{li}</div>
-      <div className="new-message">
+      <div className="Chatroom__message-list">
+        {chatroomData && chatroomData.messages.map(({ _id, content, user }) => (
+          <div className={userId === user._id ? "message__self" : "message__other"} key={_id}>
+            <div className="user">{user.name}</div>
+            <div className="content">
+              <div className="text">{content}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <form className="new-message" onSubmit={handleSubmit(async ({ newMessage }) => {
+        await axios.post(
+          `${process.env.REACT_APP_BACKEND_URL}/chatrooms/${roomId}/messages/create`,
+          { content: newMessage, userId });
+        getData();
+        reset();
+        // TODO: socket
+      })}>
         <textarea
-          value={newMessage}
-          onChange={handleNewMessageChange}
           placeholder="Write message..."
           className="new-message-input-field"
+          {...register('newMessage', { required: true })}
         />
-        <button onClick={handleSendMessage} className="send-message-button">
+        <button className="send-message-button" type="submit">
           Send
         </button>
-      </div>
+      </form>
     </div>
   );
 };
