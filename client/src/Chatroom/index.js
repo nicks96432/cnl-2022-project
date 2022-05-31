@@ -41,7 +41,9 @@ const ChatRoom = () => {
     : null;
   return (
     <div className="Chatroom">
-      <h1 className="Chatroom__title">Room: {roomId}</h1>
+      <h1 className="Chatroom__title">
+        Room: {chatroomData && chatroomData.nam}
+      </h1>
       <div className="Chatroom__message-list">
         {chatroomData ? (
           <ReactScrollableList
