@@ -23,5 +23,6 @@
   "scripts": {
     "build": "webpack",
     "start": "webpack --watch --mode development"
-  }
+  },
+  "sideEffects": false
 }

@@ -1,13 +1,14 @@
-import { createServer } from "http";
+import cookieSession from "cookie-session";
+import cors from "cors";
 import dotenv_defaults from "dotenv-defaults";
+import express from "express";
+import { createServer } from "http";
 import Mongoose from "mongoose";
 import SocketIO from "socket.io";
-import express from "express";
-import User from "./model/User";
-import Message from "./model/Message";
+
 import Chatroom from "./model/Chatroom";
-import cookieSession from 'cookie-session';
-import cors from "cors";
+import Message from "./model/Message";
+import User from "./model/User";
 
 dotenv_defaults.config();
 
@@ -19,79 +20,76 @@ app.use(
   cookieSession({
     signed: false, // disable encryption on cookie, cause JWT itself is already encrypted.
     maxAge: 90 * 24 * 60 * 60 * 1000, // 90 days
-    sameSite: 'lax',
-    path: '/',
-  }),
+    sameSite: "lax",
+    path: "/"
+  })
 );
-app.use(cors())
+app.use(cors());
 app.use((req, res, next) => {
   console.log(req.url);
   console.log(req.body);
-  console.log(req.params);
   next();
 });
 
-app.get('/', (req, res) => {
-  res.send('hi');
-})
+app.get("/", (req, res) => {
+  res.send("hi");
+});
 
-app.get('/users', async (req, res) => {
+app.get("/users", async (req, res) => {
   res.send(await User.find({}));
-})
+});
 
-app.post('/users/create', async (req, res) => {
+app.post("/users/create", async (req, res) => {
   const { name, password } = req.body;
-  if (await User.exists({ name })) return res.status(400).send('Name already exists');
+  if (await User.exists({ name }))
+    return res.status(400).send("name already exists");
   const newUser = new User({ name });
   newUser.setPassword(password);
   req.session.userId = newUser._id;
   await newUser.save();
   res.send(newUser);
-})
+});
 
-app.post('/users/login', async (req, res) => {
+app.post("/users/login", async (req, res) => {
   const { name, password } = req.body;
   const user = await User.findOne({ name });
   if (user && user.validPassword(password)) {
     req.session.userId = user._id;
-    res.send('Logged in successfully!')
-  }
-  res.status(400).send();
-})
+    res.status(200).send({ _id: user._id });
+  } else res.status(400).send();
+});
 
-app.get('/messages', async (req, res) => {
+app.get("/messages", async (req, res) => {
   res.send(await Message.find({}));
-})
+});
 
-// get all chatrooms
-app.get('/chatrooms', async (req, res) => {
+app.get("/chatrooms", async (req, res) => {
   res.send(await Chatroom.find({}));
-})
+});
 
-// create a new chatroom
-app.post('/chatrooms/create', async (req, res) => {
+app.post("/chatrooms/create", async (req, res) => {
   const { name, userId } = req.body;
-  console.log(req.session)
+  console.log(userId);
   const newRoom = new Chatroom({ name });
   newRoom.admins.push(userId);
   await newRoom.save();
-  res.send(newRoom);
-})
+  res.send({ _id: newRoom._id });
+});
 
 // get all data of a chatroom
-app.get('/chatrooms/:roomId', async (req, res) => {
+app.get("/chatrooms/:roomId", async (req, res) => {
   const { roomId } = req.params;
   const chatroom = await Chatroom.findById(roomId).populate({
-    path: 'messages',
+    path: "messages",
     populate: {
-      path: 'user',
+      path: "user"
     }
-  })
+  });
   res.send(chatroom);
-})
+});
 
 // send message to a chatroom
-app.post('/chatrooms/:roomId/messages/create', async (req, res) => {
+app.post("/chatrooms/:roomId/messages/create", async (req, res) => {
   const { content, userId } = req.body;
   const { roomId } = req.params;
   const chatroom = await Chatroom.findById(roomId);
@@ -99,19 +97,22 @@ app.post('/chatrooms/:roomId/messages/create', async (req, res) => {
   chatroom.messages.push(newMessage._id);
   chatroom.save();
   res.send(newMessage);
-})
+});
 
 // delete
-app.post('/chatrooms/:roomId/messages/:messageId', async (req, res) => {
+app.delete("/chatrooms/:roomId/messages/:messageId", async (req, res) => {
   const { userId } = req.body;
   const { roomId, messageId } = req.params; // TODO
-  if (userId && (await User.findById(userId)).isAdmin(await Chatroom.findById(roomId))) {
+  if (
+    userId &&
+    (await User.findById(userId)).isAdmin(await Chatroom.findById(roomId))
+  ) {
     await Message.deleteById(messageId);
   }
-})
+});
 
-app.get('*', function (req, res) {
-  res.status(404).send('Not Found');
+app.get("*", function (req, res) {
+  res.status(404).send("Not Found");
 });
 
 // MONGO
@@ -121,7 +122,9 @@ if (!process.env.MONGO_URL) {
 }
 Mongoose.connect(process.env.MONGO_URL);
 const db = Mongoose.connection;
+
 db.on("error", error => console.error(error));
+
 db.once("open", () => {
   console.log("Connected to MongoDB.");
 

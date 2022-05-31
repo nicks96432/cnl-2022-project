@@ -11,7 +11,9 @@ const useChat = roomId => {
 
   useEffect(() => {
     (async () => {
-      const { data } = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/chatrooms/${roomId}`)
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/chatrooms/${roomId}`
+      );
       setMessages(data.messages);
       // Creates a WebSocket connection
       socketRef.current = socketIOClient(SOCKET_SERVER_URL, {

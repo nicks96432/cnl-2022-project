@@ -13,9 +13,6 @@ module.exports = {
     path: path.resolve(__dirname, "./build"),
     filename: "index.js"
   },
-  module: {
-    rules: []
-  },
   stats: "errors-only",
   externals: [nodeExternals()],
   plugins: [new NodemonPlugin({ watch: path.resolve("./build") })]
