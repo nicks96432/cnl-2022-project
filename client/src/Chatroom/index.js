@@ -10,34 +10,31 @@ const ChatRoom = () => {
   const { userId } = useContext(Context);
   const [chatroomData, setChatroomData] = useState();
   const { register, handleSubmit, reset } = useForm();
-  const [isFirstRender, setIsFirstRender] = useState(true);
-
   const getData = useCallback(() => {
     (async () => {
       const { data } = await axios.get(
         `${process.env.REACT_APP_BACKEND_URL}/chatrooms/${roomId}`
       );
       setChatroomData(data);
-      setIsFirstRender(false);
     })()
   }, [roomId]);
-  if (isFirstRender) {
-    getData();
-  }
-  console.log(userId);
-  console.log(chatroomData);
+  useEffect(() => {
+    const intervalId = setInterval(getData, 1000);
+    return () => clearInterval(intervalId);
+  }, [getData]);
+
   return (
     <div className="Chatroom">
       <h1 className="Chatroom__title">Room: {roomId}</h1>
       <div className="Chatroom__message-list">
-        {chatroomData && chatroomData.messages.map(({ _id, content, user }) => (
+        {chatroomData ? chatroomData.messages.map(({ _id, content, user }) => (
           <div className={userId === user._id ? "message__self" : "message__other"} key={_id}>
             <div className="user">{user.name}</div>
             <div className="content">
               <div className="text">{content}</div>
             </div>
           </div>
-        ))}
+        )) : 'Loading...'}
       </div>
       <form className="new-message" onSubmit={handleSubmit(async ({ newMessage }) => {
         await axios.post(
