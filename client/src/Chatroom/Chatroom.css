@@ -1,14 +1,92 @@
 .Chatroom {
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
-  background-color: #fafafa;
+  justify-content: center;
+  margin: auto;
+  width: 80%;
 }
-
 .Chatroom__title {
   font-size: 2rem;
   font-weight: bold;
   margin: 1rem auto;
+}
+.Chatroom__message-list {
+  border-radius: 1rem;
+  border: 2px solid #888;
+  box-sizing: border-box;
+  height: 30rem;
+  width: 30rem;
+}
+
+.message__self {
+  border-radius: 1rem;
+  box-sizing: border-box;
+  margin: 1rem;
+  width: 90%;
+}
+.message__self .user {
+  font-size: 1.1vw;
+  text-align: right;
+}
+.message__self .content {
+  font-size: 1.1vw;
+  text-align: left;
+  float: right;
+  border-radius: 0.5rem;
+  border: 2px solid #888;
+  box-sizing: border-box;
+  width: 80%;
+  background-color: rgb(178, 208, 235);
+}
+
+.message__self .text {
+  font-size: 1.1vw;
+  margin-left: 2em;
+}
+
+.message__other {
+  border-radius: 1rem;
+  box-sizing: border-box;
+  margin: 1rem;
+  width: 90%;
+}
+.message__other .user {
+  font-size: 1.1vw;
+  text-align: left;
+}
+.message__other .content {
+  font-size: 1.1vw;
+  text-align: left;
+  border-radius: 0.5rem;
+  border: 2px solid #888;
+  box-sizing: border-box;
+  width: 80%;
+  background-color: rgb(230, 229, 229);
+}
+.new-message {
+  width: 30em;
+  flex-direction: column;
+}
+.message__other .text {
+  font-size: 1.1vw;
+  margin-left: 2em;
+}
+.send-message-button {
+  background: #487cce;
+  border-radius: 5px;
+  color: #ffffff;
+  cursor: pointer;
+  margin: 10px;
+  padding: 10px;
+  width: 20%;
+}
+.new-message-input-field {
+  margin-top: 1em;
+  border-radius: 0.5rem;
+  margin: 10px;
+  padding: 10px;
+  border: 2px solid #888;
+  box-sizing: border-box;
+  width: 97%;
 }

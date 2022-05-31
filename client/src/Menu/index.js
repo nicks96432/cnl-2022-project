@@ -36,9 +36,9 @@ const Home = () => {
   ));
 
   const { userId } = useContext(Context);
-  if (!userId) {
-    return <div>Please log in.</div>;
-  }
+  // if (!userId) {
+  //   return <div>Please log in.</div>;
+  // }
 
   return (
     <div className="Menu">
