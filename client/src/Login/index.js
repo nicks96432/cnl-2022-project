@@ -1,31 +1,38 @@
 import axios from "axios";
 import { useContext, useState } from "react";
-import { useHistory } from "react-router-dom";
-import { UserContext } from "../contexts/user";
+import { useNavigate } from "react-router-dom";
+import Context from "../Context";
 
 import "./Login.css";
 
 const Login = () => {
-  const history = useHistory();
-  const { setUserId } = useContext(UserContext);
+  const navigate = useNavigate();
+  const { setUserId } = useContext(Context);
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
 
   const login = async () => {
-    const url = `${process.env.REACT_APP_BACKEND_URL}/users/${
-      isLogin ? "login" : "create"
-    }`;
-    const { data } = await axios.post(url, { name, password });
-    console.log(data);
-    setUserId(data._id);
-    history.push("menu");
+    let response;
+    try {
+      response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/users/${
+          isLogin ? "login" : "create"
+        }`,
+        { name, password }
+      );
+    } catch (e) {
+      console.error(`${isLogin ? "login" : "signup"} failed: ${e}`);
+      return;
+    }
+    setUserId(response.data._id);
+    navigate("/menu");
   };
 
   return (
     <div className="Login">
       <div className="Login__title">CNL 2022 Final</div>
-      <div className="Login__form">
+      <form className="Login__form" onSubmit={e => e.preventDefault()}>
         <div className="Login__input-group">
           <input
             className="Login__input"
@@ -40,14 +47,14 @@ const Login = () => {
           />
         </div>
         <div className="Login__input-group">
-          <button className="Login__button" onClick={login}>
+          <button type="submit" className="Login__button" onClick={login}>
             {isLogin ? "ログイン!" : "サインアップ!"}
           </button>
-          <button className="Login__button" onClick={() => setIsLogin(s => !s)}>
+          <button className="Login__button" onClick={e => setIsLogin(s => !s)}>
             スウィッチ!
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

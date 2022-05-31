@@ -28,7 +28,6 @@ app.use(cors());
 app.use((req, res, next) => {
   console.log(req.url);
   console.log(req.body);
-  console.log(req.params);
   next();
 });
 
@@ -56,7 +55,7 @@ app.post("/users/login", async (req, res) => {
   const user = await User.findOne({ name });
   if (user && user.validPassword(password)) {
     req.session.userId = user._id;
-    res.status(200).send("Logged in successfully!");
+    res.status(200).send({ _id: user._id });
   } else res.status(400).send();
 });
 
@@ -70,11 +69,11 @@ app.get("/chatrooms", async (req, res) => {
 
 app.post("/chatrooms/create", async (req, res) => {
   const { name, userId } = req.body;
-  console.log(req.session);
+  console.log(userId);
   const newRoom = new Chatroom({ name });
   newRoom.admins.push(userId);
   await newRoom.save();
-  res.send(newRoom);
+  res.send({ _id: newRoom._id });
 });
 
 // get all data of a chatroom

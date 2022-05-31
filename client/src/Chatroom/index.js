@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import useChat from "./useChat";
+import { useParams } from "react-router-dom";
 
-const ChatRoom = props => {
-  const { roomId } = props.match.params; // Gets roomId from URL
+import useChat from "./useChat";
+import "./Chatroom.css";
+
+const ChatRoom = () => {
+  const { roomId } = useParams(); // Gets roomId from URL
   const { messages, sendMessage } = useChat(roomId); // Creates a websocket and manages messaging
   const [newMessage, setNewMessage] = useState(""); // Message to be sent
 
@@ -16,16 +19,12 @@ const ChatRoom = props => {
   };
 
   return (
-    <div className="chat-room-container">
-      <h1 className="room-name">Room: {roomId}</h1>
-      <div className="messages-container">
-        <ol className="messages-list">
-          {messages.map((message, i) => (
-            <li key={i}>
-              <div>{message.body}</div>
-            </li>
-          ))}
-        </ol>
+    <div className="Chatroom">
+      <h1 className="Chatroom__title">Room: {roomId}</h1>
+      <div className="Chatroom__message-list">
+        {messages.map((message, i) => (
+          <div key={i}>{message.body}</div>
+        ))}
       </div>
       <textarea
         value={newMessage}

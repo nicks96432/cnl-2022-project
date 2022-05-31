@@ -1,19 +1,24 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import ChatRoom from "./ChatRoom/ChatRoom";
-import Login from "./Login/Login";
-import Menu from "./Menu/Menu";
+import Chatroom from "./Chatroom";
+import Context from "./Context";
+import Login from "./Login";
+import Menu from "./Menu";
 
 function App() {
+  const [userId, setUserId] = useState("");
+
   return (
-    <Router>
-      <Switch>
-        <Route exact path="/" component={Login} />
-        <Route exact path="/menu" component={Menu} />
-        <Route exact path="/:roomId" component={ChatRoom} />
-      </Switch>
-    </Router>
+    <Context.Provider value={{ userId, setUserId }}>
+      <Router>
+        <Routes>
+          <Route path="/menu" element={<Menu />} />
+          <Route path="/:roomId" element={<Chatroom />} />
+          <Route path="/" element={<Login />} />
+        </Routes>
+      </Router>
+    </Context.Provider>
   );
 }
 

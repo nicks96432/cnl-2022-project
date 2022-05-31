@@ -4,7 +4,7 @@ const ChatroomSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: true
     },
     admins: {
       type: [Schema.Types.ObjectId],

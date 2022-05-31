@@ -1,46 +1,45 @@
 import axios from "axios";
 import { useContext, useEffect, useRef, useState } from "react";
-import { useHistory } from "react-router-dom";
-import { UserContext } from "../contexts/user";
+import { useNavigate } from "react-router-dom";
+import Context from "../Context";
 
 import "./Menu.css";
 
 const Home = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [chatrooms, setChatrooms] = useState([]);
   useEffect(() => {
     (async () => {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/chatrooms`
-      );
-      setChatrooms(data);
+      let response;
+      try {
+        response = await axios.get(
+          `${process.env.REACT_APP_BACKEND_URL}/chatrooms`
+        );
+      } catch (e) {
+        console.error(`get chatrooms failed: ${e}`);
+        return;
+      }
+      setChatrooms(response.data);
     })();
   }, []);
 
-  useEffect(() => {
-    console.log(chatrooms);
-  }, [chatrooms]);
-
   const inputRef = useRef(null);
 
-  const fakeData = [
-    { name: "Chat Room 1", admins: [], _id: 123 },
-    { name: "Chat Room 2", admins: [], _id: 345 },
-    { name: "Chat Room 3", admins: [], _id: 567 },
-    { name: "Chat Room 4", admins: [], _id: 897 }
-  ];
-
-  const Li = fakeData.map((chatroom, index) => (
+  const Li = chatrooms.map((chatroom, index) => (
     <div
       className="Menu__chatroom__item"
       key={index}
-      onClick={() => history.push(chatroom._id.toString())}
+      onClick={() => navigate(`/${chatroom._id}`)}
     >
       <div className="Menu__chatroom__item__name">{chatroom.name}</div>
     </div>
   ));
 
-  const { userId } = useContext(UserContext);
+  const { userId } = useContext(Context);
+  if (!userId) {
+    return <div>Please log in.</div>;
+  }
+
   return (
     <div className="Menu">
       <div className="Menu__title">Chatroom List</div>
@@ -56,10 +55,17 @@ const Home = () => {
         <button
           className="Menu__button"
           onClick={async () => {
-            await axios.post(
-              `${process.env.REACT_APP_BACKEND_URL}/chatrooms/create`,
-              { name: inputRef.current.value, userId }
-            );
+            let response;
+            try {
+              response = await axios.post(
+                `${process.env.REACT_APP_BACKEND_URL}/chatrooms/create`,
+                { name: inputRef.current.value, userId }
+              );
+            } catch (e) {
+              console.error(`create chatroom failed: ${e}`);
+              return;
+            }
+            navigate(`/${response.data._id}`);
           }}
         >
           Add chatroom
