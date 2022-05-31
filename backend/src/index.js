@@ -63,10 +63,12 @@ app.get('/messages', async (req, res) => {
   res.send(await Message.find({}));
 })
 
+// get all chatrooms
 app.get('/chatrooms', async (req, res) => {
   res.send(await Chatroom.find({}));
 })
 
+// create a new chatroom
 app.post('/chatrooms/create', async (req, res) => {
   const { name, userId } = req.body;
   console.log(req.session)
@@ -76,13 +78,22 @@ app.post('/chatrooms/create', async (req, res) => {
   res.send(newRoom);
 })
 
+// get all data of a chatroom
 app.get('/chatrooms/:roomId', async (req, res) => {
   const { roomId } = req.params;
-  res.send(await Chatroom.findById(roomId).populate());
+  const chatroom = await Chatroom.findById(roomId).populate({
+    path: 'messages',
+    populate: {
+      path: 'user',
+    }
+  })
+  res.send(chatroom);
 })
 
+// send message to a chatroom
 app.post('/chatrooms/:roomId/messages/create', async (req, res) => {
-  const { roomId, content, userId } = req.body;
+  const { content, userId } = req.body;
+  const { roomId } = req.params;
   const chatroom = await Chatroom.findById(roomId);
   const newMessage = await Message.create({ content, user: userId });
   chatroom.messages.push(newMessage._id);
@@ -90,8 +101,10 @@ app.post('/chatrooms/:roomId/messages/create', async (req, res) => {
   res.send(newMessage);
 })
 
-app.delete('/chatrooms/:roomId/messages/:messageId', async (req, res) => {
-  const { roomId, messageId, userId } = req.params;
+// delete
+app.post('/chatrooms/:roomId/messages/:messageId', async (req, res) => {
+  const { userId } = req.body;
+  const { roomId, messageId } = req.params; // TODO
   if (userId && (await User.findById(userId)).isAdmin(await Chatroom.findById(roomId))) {
     await Message.deleteById(messageId);
   }
