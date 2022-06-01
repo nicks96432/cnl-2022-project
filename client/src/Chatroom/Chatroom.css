@@ -6,92 +6,106 @@
   margin: auto;
   width: 80%;
 }
+
 .Chatroom__title {
-  font-size: 2rem;
+  font-size: 2.5vw;
   font-weight: bold;
   margin: 1rem auto;
 }
+
 .Chatroom__message-list {
   border-radius: 1rem;
   border: 2px solid #888;
   box-sizing: border-box;
   height: 30rem;
   overflow-y: scroll;
-  width: 30rem;
-}
-
-.message__self {
-  border-radius: 1rem;
-  box-sizing: border-box;
-  margin-top: 2px;
-  height: 3rem;
-  margin: 1rem;
-  width: 90%;
-}
-.message__self .user {
-  font-size: 1.1vw;
-  text-align: right;
-}
-.message__self .content {
-  font-size: 1.1vw;
-  text-align: left;
-  margin-top: 1px;
-  float: right;
-  border-radius: 0.5rem;
-  border: 2px solid #888;
-  box-sizing: border-box;
   width: 80%;
-  background-color: rgb(178, 208, 235);
 }
 
-.message__self .text {
-  font-size: 1.1vw;
-  margin-left: 2em;
-}
-
+.message__self,
 .message__other {
   border-radius: 1rem;
   box-sizing: border-box;
   margin: 1rem;
-  width: 90%;
+  width: 95%;
 }
-.message__other .user {
-  font-size: 1.1vw;
-  text-align: left;
-  margin-top: 1px;
+
+.message__self {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
-.message__other .content {
+
+.message__name {
   font-size: 1.1vw;
-  text-align: left;
-  border-radius: 0.5rem;
-  border: 2px solid #888;
+}
+
+.message__delete {
+  padding: 10px;
+  background: none;
+  cursor: pointer;
+}
+
+.message__delete > img {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.message__content-wrapper {
+  display: flex;
+  width: 60%;
+}
+
+.message__content {
+  border-radius: 5px;
+  border: 1px solid #888;
   box-sizing: border-box;
-  width: 80%;
-  background-color: rgb(230, 229, 229);
+  margin-top: 5px;
+  padding: 10px;
+  text-align: left;
+  word-wrap: break-word;
+  max-width: 100%;
 }
+
+.message__self .message__content-wrapper {
+  justify-content: end;
+}
+
+.message__self .message__content {
+  background: #487cce;
+  color: #ffffff;
+}
+
+.message__other .message__content-wrapper {
+  flex-direction: row-reverse;
+  justify-content: start;
+}
+
+.message__other .message__content {
+  background-color: #eeeeee;
+}
+
 .new-message {
-  width: 30em;
+  width: 80%;
   flex-direction: column;
 }
-.message__other .text {
-  font-size: 1.1vw;
-  margin-left: 2em;
-}
+
 .send-message-button {
   background: #487cce;
   border-radius: 5px;
   color: #ffffff;
   cursor: pointer;
   margin: 10px;
-  padding: 10px;
-  width: 20%;
+  padding: 10px 20px;
 }
+
 .new-message-input-field {
-  margin-top: 1em;
   border-radius: 0.5rem;
-  margin: 10px;
-  padding: 10px;
   border: 2px solid #888;
   box-sizing: border-box;
-  width: 97%;
+  margin-top: 1em;
+  margin: 10px 0;
+  padding: 10px;
+  resize: vertical;
+  width: 100%;
 }

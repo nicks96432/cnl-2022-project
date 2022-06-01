@@ -25,11 +25,6 @@ app.use(
   })
 );
 app.use(cors());
-app.use((req, res, next) => {
-  console.log(req.url);
-  console.log(req.body);
-  next();
-});
 
 app.get("/", (req, res) => {
   res.send("hi");
@@ -102,13 +97,16 @@ app.post("/chatrooms/:roomId/messages/create", async (req, res) => {
 // delete
 app.delete("/chatrooms/:roomId/messages/:messageId", async (req, res) => {
   const { userId } = req.body;
-  const { roomId, messageId } = req.params; // TODO
-  if (
-    userId &&
-    (await User.findById(userId)).isAdmin(await Chatroom.findById(roomId))
-  ) {
-    await Message.deleteById(messageId);
-  }
+  const { roomId, messageId } = req.params;
+  const isAdmin = (await User.findById(userId)).isAdmin(
+    await Chatroom.findById(roomId)
+  );
+  console.log(isAdmin);
+  if (userId && isAdmin) {
+    await Message.deleteOne({ _id: messageId });
+    res.sendStatus(200);
+    console.log("success");
+  } else res.sendStatus(401);
 });
 
 app.get("*", function (req, res) {
